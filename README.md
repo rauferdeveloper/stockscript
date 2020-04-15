@@ -12,10 +12,13 @@ npm install
 ```
 3) Modify the config.json with your products and your email configuration
 
-4) Run
+4) Run and wait
 ```bash
 node index
 ```
+
+## Note
+Try first with a product with stock, and test that you receive the email with the product link. 
 
 ## How to get the productId and catalogRefIds for a product
 1) Go to the desired product decathlon page.
