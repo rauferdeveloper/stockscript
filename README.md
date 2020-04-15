@@ -1,7 +1,12 @@
 # decathlonscript
 Script to receive an email when a product/products have stock
 
-## Steps
+## Pro Steps: Docker
+If you want to avoid install node and so on, follow these steps:
+1) Modify the config.json with your products and your email configuration
+2) Run ```docker build -t decathlonscript . ``` and THAT'S ALL.
+
+## Human Steps
 1) Make sure you have node installed
 ```bash
 node --version
