@@ -4,8 +4,7 @@ const nodemailer = require('nodemailer');
 const moment = require('moment');
 
 const config = require('./configSample.json')
-const { products } = config;
-const { email } = config;
+const { products, email } = config;
 
 const PURCHASE_URL = "https://www.decathlon.es/es/ajax/rest/model/atg/commerce/order/purchase/CartModifierActor/addItemToOrder";
 
