@@ -1,8 +1,8 @@
 {
 	"email" : {
-		"host": "WRITE HERE THE EMAIL HOST",
+		"host": "WRITE HERE THE SENDER EMAIL HOST",
 		"from": "WRITE HERE THE SENDER EMAIL",
-		"password": "WRITE HERE THE EMAIL PASSWORD",
+		"password": "WRITE HERE THE SENDER EMAIL PASSWORD",
 		"to": "WRITE HERE THE RECEIVER EMAIL"
 	},
 	"products": [
