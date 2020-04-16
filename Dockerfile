@@ -1,12 +1,8 @@
-FROM debian:latest
+FROM node:8.10.0-slim
 
 COPY . /stockapp
 
 WORKDIR stockapp
 
-RUN apt-get update && \
-		apt-get -y install curl gnupg && \
-		curl -sL https://deb.nodesource.com/setup_10.x | bash && \
-		apt-get install nodejs -y && \
-		npm install && \
+RUN npm install && \
 		node index
