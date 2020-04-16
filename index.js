@@ -3,7 +3,7 @@ const { URLSearchParams } = require('url');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
 
-const config = require('./configSample.json')
+const config = require('./config.json')
 const { products, email } = config;
 
 const PURCHASE_URL = "https://www.decathlon.es/es/ajax/rest/model/atg/commerce/order/purchase/CartModifierActor/addItemToOrder";
