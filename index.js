@@ -54,6 +54,7 @@ async function init() {
 	}
 }
 
+
 setInterval(function () {
 	init()
 }, 5000);
