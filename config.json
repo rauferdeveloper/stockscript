@@ -8,7 +8,7 @@
 	"products": [
 		{
 			"productId": "WRITE HERE THE PRODUCTID" ,
-			"catalogRefIds": "WRITE HERE THE CATALOGREFIDS",
+			"catalogRefId": "WRITE HERE THE CATALOGREFIDS",
 			"name": "WRITE HERE THE PRODUCT NAME",
 			"link": "WRITE HERE THE PRODUCT LINK",
 			"outOfStock": true
