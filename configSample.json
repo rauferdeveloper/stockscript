@@ -20,5 +20,8 @@
 			"link": "https://www.decathlon.es/es/p/zapatillas-caminar-adidas-lite-racer-mujer-negras/_/R-p-X8541571?mc=8541571",
 			"outOfStock": true
 		}
-	]
+	],
+	"token": "TOKEN_BOT",
+	"user_id": 0,
+	"time": 5000
 }

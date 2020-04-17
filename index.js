@@ -1,10 +1,13 @@
+process.env["NTBA_FIX_319"] = 1;
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
-
-const config = require('./config.json')
-const { products, email } = config;
+const TelegramBot = require('node-telegram-bot-api');
+const fs = require('fs')
+const config = require('./config/config.json')
+const { products, email, token , user_id, time} = config;
+const bot = new TelegramBot(token, {polling: true});
 
 const PURCHASE_URL = "https://www.decathlon.es/es/ajax/rest/model/atg/commerce/order/purchase/CartModifierActor/addItemToOrder";
 
@@ -18,11 +21,43 @@ const transporter = nodemailer.createTransport({
 	    }
 	  });
 
+// User registered telegram
+bot.onText(/^\/start/, (msg) => {
+	if(msg.chat.type.toString().toLowerCase() == "private"){
+		var fich = fs.readFileSync("config/config.json"); 
+
+        // Definition to the JSON type 
+		var fich_parse = JSON.parse(fich);
+		fich_parse['user_id'] = msg.chat.id
+		//rewrite json file
+		fs.writeFileSync('config/config.json', JSON.stringify(fich_parse),'utf8', 4, (err) => {
+			if (err) throw err;
+		});
+		bot.sendMessage(msg.chat.id, "Bienvenido "+ msg.chat.first_name + " ya he registrado tu usuario ahora recibirar los productos que esten en stock")
+	}
+})
+// Update time response
+bot.onText(/^\/update_time (.+)/, (msg, match) => {
+	if(msg.chat.type.toString().toLowerCase() == "private"){
+		var fich = fs.readFileSync("config/config.json"); 
+  
+        // Definition to the JSON type 
+		var fich_parse = JSON.parse(fich);
+		if(user_id == msg.chat.id){
+			fich_parse['time'] = parseInt(match[1])
+			//rewrite json file
+			fs.writeFileSync('config/config.json', JSON.stringify(fich_parse),'utf8', 4, (err) => {
+				if (err) throw err;
+			});
+			bot.sendMessage(msg.chat.id, "Se ha actualizado correctamente el tiempo")
+		}
+
+	}
+})
 
 async function init() {
 	for (let i = 0; i < products.length; i++) {
 		const product = products[i];
-
 		if (product.outOfStock) {
 			const params = new URLSearchParams();
 			params.append('catalogRefIds', product.catalogRefId);
@@ -34,20 +69,28 @@ async function init() {
 	    .then(async json => {
 	    	const isOnStock = json.responseTO.data;
 	    	if (isOnStock) {
-	    			let info = await transporter.sendMail({
+				
+	    		let info = await transporter.sendMail({
 				    from: email.from, // sender address
 				    to: email.to, // list of receivers
-				    subject: "YA HAY STOCK EN DECATHLON MUAJAJA ✔", // Subject line
+				    subject: "YA HAY STOCK EN DECATHLON ✔", // Subject line
 				    text: `HAY UNIDADES DE ${product.name}`, // plain text body
 				    html: `<b>HAY UNIDADES DE ${product.name}</b> 
 				    <p> CORRE INSENSATO!! </p>
 				    <p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
-			  	});
-					product.outOfStock = false;
-					console.log(moment().format(), `There is stock for -> ${product.name}. Email already sent`)
-				} else {
-					console.log(moment().format(), `No stock for -> ${product.name}.`)
+				})
+				if(user_id > 0){
+					bot.sendMessage(user_id,'<b>HAY UNIDADES DE ' + product.name + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
 				}
+				product.outOfStock = false;
+				//console.log(moment().format(), `There is stock for -> ${product.name}. Email already sent`)
+			} else {
+				if(user_id > 0){
+					bot.sendMessage(user_id, 'Aún no hay stock de ' + product.name, {parse_mode: "HTML"});
+				}
+
+				//console.log(moment().format(), `No stock for -> ${product.name}.`)
+			}
 	    })
 	    .catch(err => console.log(err));
 		}
@@ -56,5 +99,5 @@ async function init() {
 
 setInterval(function () {
 	init()
-}, 5000);
+}, time);
 
