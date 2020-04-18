@@ -8,7 +8,7 @@ const cheerio = require('cheerio')
 const request = require('request');
 const fs = require('fs')
 const config = require('./config/config.json')
-const { products, email, token , user_id, time} = config;
+const { products, email, token , user_id, time, providers} = config;
 const bot = new TelegramBot(token, {polling: true});
 
 //API
@@ -65,16 +65,28 @@ bot.onText(/^\/update_products (.+)/, (msg, match) => {
 		var fich_parse = JSON.parse(fich);
 		if(user_id == msg.chat.id){
 			new_link = match[1]
-			products.push({
-				"link": new_link,
-				"outOfStock": true
-			})
-			fich_parse['products'] = products
-			//rewrite json file
-			fs.writeFileSync('config/config.json', JSON.stringify(fich_parse),'utf8', 4, (err) => {
-				if (err) throw err;
-			});
-			bot.sendMessage(msg.chat.id, "Se ha añadido correctamente el nuevo producto")
+			type_link = new_link.split('.')
+			has_found_provider = false
+			if(providers.indexOf(type_link[1]) != -1){
+				has_found_provider = providers[providers.indexOf(type_link[1])]
+			}
+			if(!has_found_provider){
+				bot.sendMessage(msg.chat.id, "Ahora mismo no puedo guardar el producto de esa paǵina")
+
+			}else{
+				products.push({
+					"type": has_found_provider, 
+					"link": new_link,
+					"outOfStock": true
+				})
+				fich_parse['products'] = products
+				//rewrite json file
+				fs.writeFileSync('config/config.json', JSON.stringify(fich_parse),'utf8', 4, (err) => {
+					if (err) throw err;
+				});
+				bot.sendMessage(msg.chat.id, "Se ha añadido correctamente el nuevo producto")
+			}
+			
 		}
 	}
 })
@@ -85,8 +97,16 @@ async function init() {
 		request(product.link, function (error, response, body) {
 			if (!error && response.statusCode==200) {
 				var $ = cheerio.load(body);
-				var no_stock_answer = $('div.stock-notification__invite--active').html();
-				var title = $('h1').html();
+				var no_stock_answer = ""
+				var title = ""
+				if(product.type == "amazon"){
+					no_stock_answer = $('#outOfStock').html();
+					title = $('title').html();
+				}else{
+					no_stock_answer = $('div.stock-notification__invite--active').html();
+					title = $('h1').html();
+				}
+			
 				if(product.outOfStock){
 					if(no_stock_answer){
 						if(user_id > 0){
@@ -118,5 +138,5 @@ async function init() {
 
 setInterval(function () {
 	init()
-}, time);
+}, 5000);
 
