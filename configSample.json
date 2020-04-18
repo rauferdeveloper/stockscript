@@ -7,16 +7,10 @@
 	},
 	"products": [
 		{
-			"productId": "182851",
-			"catalogRefId": "2364931",
-			"name": "MANCUERNAS DE 15 KILOS",
 			"link": "https://www.decathlon.es/es/p/mancuerna-hexagonal-hex-dumbbell-cross-training-musculacion-15-kg-negro/_/R-p-182851?mc=8399333&c=NEGRO",
 			"outOfStock": true
 		},
 		{
-			"productId": "X8541571",
-			"catalogRefId": "2859200",
-			"name": "ZAPATILLAS",
 			"link": "https://www.decathlon.es/es/p/zapatillas-caminar-adidas-lite-racer-mujer-negras/_/R-p-X8541571?mc=8541571",
 			"outOfStock": true
 		}
