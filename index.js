@@ -8,7 +8,7 @@ const cheerio = require('cheerio')
 const request = require('request');
 const fs = require('fs')
 const config = require('./config/config.json')
-const { products, email, token , user_id, time, providers} = config;
+var { products, email, token , user_id, time, providers} = config;
 const bot = new TelegramBot(token, {polling: true});
 
 //API
@@ -92,52 +92,61 @@ bot.onText(/^\/update_products (.+)/, (msg, match) => {
 })
 
 async function init() {
-	for (let i = 0; i < products.length; i++) {
-		const product = products[i];
-		request(product.link, function (error, response, body) {
-			if (!error && response.statusCode==200) {
-				if(product.outOfStock){
-					var $ = cheerio.load(body);
-					var no_stock_answer = ""
-					var title = ""
-					if(product.type == "amazon"){
-						no_stock_answer = $('#outOfStock').html();
-						title = $('title').html();
-					}else{
-						no_stock_answer = $('div.stock-notification__invite--active').html();
-						title = $('h1').html();
-					}
-				
+	products_filter = products.filter(product => product.outOfStock)
+	console.log(products_filter)
+	if(products_filter.length > 0){
+		for (let i = 0; i < products_filter.length; i++) {
+			const product = products_filter[i];
+			request(product.link, function (error, response, body) {
+				if (!error && response.statusCode==200) {
+					if(product.outOfStock){
+						var $ = cheerio.load(body);
+						var no_stock_answer = ""
+						var title = ""
+						type = "AMAZON"
+						if(product.type == "amazon"){
+							no_stock_answer = $('#outOfStock').html();
+							title = $('title').html();
+						}else{
+							no_stock_answer = $('div.stock-notification__invite--active').html();
+							title = $('h1').html();
+							type = "DECATHLON"
+						}
 					
-						if(no_stock_answer){
-							if(user_id > 0){
-								bot.sendMessage(user_id, 'Aún no hay stock de ' + title, {parse_mode: "HTML"});
+						
+							if(no_stock_answer){
+								if(user_id > 0){
+									bot.sendMessage(user_id, 'Aún no hay stock de ' + title, {parse_mode: "HTML"});
+								}
 							}
-						}
-						else {
-							product.outOfStock = false
-							let info = transporter.sendMail({
-								from: email.from, // sender address
-								to: email.to, // list of receivers
-								subject: "YA HAY STOCK EN DECATHLON ✔", // Subject line
-								text: `HAY UNIDADES DE ${title}`, // plain text body
-								html: `<b>HAY UNIDADES DE ${title}</b> 
-								<p> CORRE INSENSATO!! </p>
-								<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
-							})
-							if(user_id > 0){
-								bot.sendMessage(user_id,'<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
+							else {
+								product.outOfStock = false
+								let info = transporter.sendMail({
+									from: email.from, // sender address
+									to: email.to, // list of receivers
+									subject: "YA HAY STOCK EN "+ type + " ✔", // Subject line
+									text: `HAY UNIDADES DE ${title}`, // plain text body
+									html: `<b>HAY UNIDADES DE ${title}</b> 
+									<p> CORRE INSENSATO!! </p>
+									<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
+								})
+								if(user_id > 0){
+									bot.sendMessage(user_id,'YA HAY STOCK EN <b>'+ type +'</b>\n<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
+								}
 							}
-						}
-				}
-				
-			} 
-		});
-
+					}
+					
+				} 
+			});
+	
+		}
+	}else{
+		bot.sendMessage(user_id, "TODOS LOS PRODUCTOS DE TU LISTA TIENEN STOCK")
 	}
+	
 }
 
 setInterval(function () {
 	init()
-}, 5000);
+}, time);
 

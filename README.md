@@ -15,31 +15,29 @@ node --version
 ```bash
 npm install
 ```
-3) Modify the config.json with your products and your email configuration
+3) Modify the config.json with your products, your email configuration and Telegram token
 
 4) Run and wait
 ```bash
 node index
 ```
+## Bot telegram
+GITHUB Node t_elegram bot api: https://github.com/yagop/node-telegram-bot-api
 
-## Note
-Try first with a product with stock, and test that you receive the email with the product link. 
+1) Tutorial create bot in telegram in many languages
+https://github.com/yagop/node-telegram-bot-api/blob/master/doc/tutorials.md
 
-## How to get the productId and catalogRefIds for a product
-1) Go to the desired product decathlon page.
-Example: https://www.decathlon.es/es/p/mancuerna-hexagonal-hex-dumbbell-cross-training-musculacion-15-kg-negro/_/R-p-182851?mc=8399333&c=NEGRO
-2) Click the right mouse button and click on "Inspect"
-3) Click on "console" tab and write in the blue arrow:
-```window.tc_vars.product_id_super_model```
-A red number will be displayed, this number is the productId!
-4) Now write:
-```window.tc_vars.product_id_article[0]``` 
-This number is the catalogRefIds
+2) Once the telegram bot is created in the configuration file put the token
 
-## Important
-I tried first with my gmail address, but Google has a feature that blocks this action. For that reason I used an outlook email.
+3) Util bot commands
+Update list of products
+``` /update_products link_product``` 
+``` /update_products https://www.amazon.es/Habitdesign-0F4586A-Comedor-Extensible-Canadian/dp/B0764CDHX3/ref=redir_mobile_desktop?ie=UTF8&aaxitk=Jo3pfthdzs94ZBGhw4sqQw&hsa_cr_id=4090700380602&ref_=sb_s_sparkle``` 
 
+<b>IMPORTANT</b> only amazon o decathlon providers links.
 
-## Donations
-Paypal: sudosuberenu@gmail.com
-😍 I'm saving to buy this 😍 -> https://www.amazon.es/Samsung-C27R504FHU-Pantalla-para-Curva/dp/B07PBBM8SW/ref=sr_1_4?__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=monitor+curvo&qid=1587139759&sr=8-4
+Update interval time 
+``` /update_time time```
+``` /update_time 60000``` 1 minute interval
+
+<b>IMPORTANT</b> time in miliseconds.
