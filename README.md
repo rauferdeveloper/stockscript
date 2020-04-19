@@ -30,14 +30,14 @@ https://github.com/yagop/node-telegram-bot-api/blob/master/doc/tutorials.md
 2) Once the telegram bot is created in the configuration file put the token
 
 3) Util bot commands
-Update list of products
-``` /update_products link_product``` 
+Update list of products <br>
+``` /update_products link_product``` <br> 
 ``` /update_products https://www.amazon.es/Habitdesign-0F4586A-Comedor-Extensible-Canadian/dp/B0764CDHX3/ref=redir_mobile_desktop?ie=UTF8&aaxitk=Jo3pfthdzs94ZBGhw4sqQw&hsa_cr_id=4090700380602&ref_=sb_s_sparkle``` 
 
 <b>IMPORTANT</b> only amazon o decathlon providers links.
 
-Update interval time 
-``` /update_time time```
+Update interval time <br>
+``` /update_time time```<br>
 ``` /update_time 60000``` 1 minute interval
 
 <b>IMPORTANT</b> time in miliseconds.
