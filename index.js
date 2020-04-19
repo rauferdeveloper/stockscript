@@ -93,7 +93,6 @@ bot.onText(/^\/update_products (.+)/, (msg, match) => {
 
 async function init() {
 	products_filter = products.filter(product => product.outOfStock)
-	console.log(products_filter)
 	if(products_filter.length > 0){
 		for (let i = 0; i < products_filter.length; i++) {
 			const product = products_filter[i];
