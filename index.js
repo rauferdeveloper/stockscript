@@ -91,7 +91,7 @@ bot.onText(/^\/update_products (.+)/, (msg, match) => {
 	}
 })
 
-async function init() {
+function init() {
 	for (let i = 0; i < products.length; i++) {
 		const product = products[i];
 		if(product.outOfStock){
