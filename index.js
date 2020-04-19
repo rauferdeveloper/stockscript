@@ -96,38 +96,39 @@ async function init() {
 		const product = products[i];
 		request(product.link, function (error, response, body) {
 			if (!error && response.statusCode==200) {
-				var $ = cheerio.load(body);
-				var no_stock_answer = ""
-				var title = ""
-				if(product.type == "amazon"){
-					no_stock_answer = $('#outOfStock').html();
-					title = $('title').html();
-				}else{
-					no_stock_answer = $('div.stock-notification__invite--active').html();
-					title = $('h1').html();
-				}
-			
 				if(product.outOfStock){
-					if(no_stock_answer){
-						if(user_id > 0){
-							bot.sendMessage(user_id, 'Aún no hay stock de ' + title, {parse_mode: "HTML"});
-						}
+					var $ = cheerio.load(body);
+					var no_stock_answer = ""
+					var title = ""
+					if(product.type == "amazon"){
+						no_stock_answer = $('#outOfStock').html();
+						title = $('title').html();
+					}else{
+						no_stock_answer = $('div.stock-notification__invite--active').html();
+						title = $('h1').html();
 					}
-					else {
-						product.outOfStock = false
-						let info = transporter.sendMail({
-							from: email.from, // sender address
-							to: email.to, // list of receivers
-							subject: "YA HAY STOCK EN DECATHLON ✔", // Subject line
-							text: `HAY UNIDADES DE ${title}`, // plain text body
-							html: `<b>HAY UNIDADES DE ${title}</b> 
-							<p> CORRE INSENSATO!! </p>
-							<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
-						})
-						if(user_id > 0){
-							bot.sendMessage(user_id,'<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
+				
+					
+						if(no_stock_answer){
+							if(user_id > 0){
+								bot.sendMessage(user_id, 'Aún no hay stock de ' + title, {parse_mode: "HTML"});
+							}
 						}
-					}
+						else {
+							product.outOfStock = false
+							let info = transporter.sendMail({
+								from: email.from, // sender address
+								to: email.to, // list of receivers
+								subject: "YA HAY STOCK EN DECATHLON ✔", // Subject line
+								text: `HAY UNIDADES DE ${title}`, // plain text body
+								html: `<b>HAY UNIDADES DE ${title}</b> 
+								<p> CORRE INSENSATO!! </p>
+								<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
+							})
+							if(user_id > 0){
+								bot.sendMessage(user_id,'<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
+							}
+						}
 				}
 				
 			} 
@@ -138,5 +139,5 @@ async function init() {
 
 setInterval(function () {
 	init()
-}, time);
+}, 5000);
 
