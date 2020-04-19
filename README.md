@@ -22,7 +22,7 @@ npm install
 node index
 ```
 ## Bot telegram
-GITHUB Node t_elegram bot api: https://github.com/yagop/node-telegram-bot-api
+GITHUB Node telegram bot api: https://github.com/yagop/node-telegram-bot-api
 
 1) Tutorial create bot in telegram in many languages
 https://github.com/yagop/node-telegram-bot-api/blob/master/doc/tutorials.md
