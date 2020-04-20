@@ -109,24 +109,22 @@ function init() {
 						title = $('h1').html();
 						type = "DECATHLON"
 					}
-					if(no_stock_answer){}
-					else{
-						product.outOfStock = false
-						let info = transporter.sendMail({
-							from: email.from, // sender address
-							to: email.to, // list of receivers
-							subject: "YA HAY STOCK EN "+ type + " ✔", // Subject line
-							text: `HAY UNIDADES DE ${title}`, // plain text body
-							html: `<b>HAY UNIDADES DE ${title}</b> 
-							<p> CORRE INSENSATO!! </p>
-							<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
-						})
-						if(user_id > 0){
-							bot.sendMessage(user_id,'YA HAY STOCK EN <b>'+ type +'</b>\n<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
-						}
+					if(no_stock_answer){
+						return;
 					}
-						
-					
+					product.outOfStock = false
+					let info = transporter.sendMail({
+						from: email.from, // sender address
+						to: email.to, // list of receivers
+						subject: "YA HAY STOCK EN "+ type + " ✔", // Subject line
+						text: `HAY UNIDADES DE ${title}`, // plain text body
+						html: `<b>HAY UNIDADES DE ${title}</b> 
+						<p> CORRE INSENSATO!! </p>
+						<p>	LINK: <a href="${product.link}">${product.link}</a> </p>`
+					})
+					if(user_id > 0){
+						bot.sendMessage(user_id,'YA HAY STOCK EN <b>'+ type +'</b>\n<b>HAY UNIDADES DE ' + title + '</b>\n CORRE INSENSATO!! \n LINK: <a href="' + product.link + '">' + product.link + '</a> ', {parse_mode: "HTML"});
+					}
 				} 
 			});	
 		}
