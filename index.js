@@ -109,13 +109,7 @@ function init() {
 						title = $('h1').html();
 						type = "DECATHLON"
 					}
-				
-					
-					if(no_stock_answer){
-						if(user_id > 0){
-							bot.sendMessage(user_id, 'Aún no hay stock de ' + title, {parse_mode: "HTML"});
-						}
-					} else {
+					if(no_stock_answer != "") {
 						product.outOfStock = false
 						let info = transporter.sendMail({
 							from: email.from, // sender address
