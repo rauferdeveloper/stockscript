@@ -7,7 +7,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const cheerio = require('cheerio')
 const request = require('request');
 const fs = require('fs')
-const config = require('./config/config.json')
+const config = require('./config.json')
 var { products, email, token , user_id, time, providers} = config;
 const bot = new TelegramBot(token, {polling: true});
 
